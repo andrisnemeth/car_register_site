@@ -1,0 +1,50 @@
+@media only screen and (max-width: 600px) {
+  .hero_content {
+    position: relative;
+    overflow-x: hidden;
+    color: black;
+    font-weight: 900;
+    font-size: larger;
+    clip-path: rect(0, 0, 200px, 0);
+  }
+
+  .hero_img_wrapper{
+    max-height: 500px;
+  }
+
+  .text_on_hero {
+    position: absolute;
+    left: 10%;
+    bottom: 65%;
+  }
+
+  .hero_registration {
+    padding-left: 10%;
+  }
+
+  .hero_login{
+    padding-left: 10%;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .hero_content {
+    position: relative;
+    left: 10%;
+    color: black;
+    font-weight: 900;
+    font-size: larger;
+  }
+
+  .text_on_hero {
+    position: absolute;
+    bottom: 50%;
+  }
+
+  .hero_registration {
+    left: 10%;
+  }
+  .hero_login{
+
+  }
+}
