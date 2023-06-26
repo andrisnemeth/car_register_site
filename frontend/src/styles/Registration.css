@@ -1,0 +1,46 @@
+@media only screen and (max-width: 600px) {
+  .registration_form_container {
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    width: 50%;
+    background-color: white;
+  }
+
+  .registration_form_headline {
+    margin: 3rem 0;
+  }
+
+  #registration_submit_button{
+   font-weight: 900;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .registration_form_container {
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    width: 50%;
+    background-color: white;
+
+  }
+
+  .registration_form_headline {
+    margin: 3rem 0;
+  }
+
+  .registration_form_container{
+    width: 30%;
+  }
+
+  #registration_submit_button{
+    margin: auto;
+    margin-top: 2rem;
+    font-weight: 900;
+  }
+}
+
+
