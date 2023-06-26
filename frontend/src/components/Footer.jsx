@@ -9,6 +9,45 @@ function Footer() {
 
   return (
       <>
+        {isMobile && (
+         <footer className="footer">
+         <div className="containerGridForFooter_mobile">
+           <div className="addressColumn">
+             <p className='footerHeader'> Contact us</p>
+             <address className='contacts'>
+             <p>1000 Budapest, <br/>Nulla Street 0.<br/> Ground Floor
+              </p>
+               <p>0630 123 4567</p>
+               <p>peldaemail@pelda.com</p>
+             </address>  
+             </div>
+           <nav className="navCol">
+             <p className='footerHeader'>Account</p>
+             <ul className="footerNav">
+               <li>Create account</li>
+               <li>Sign in</li>
+               <li>iOS app</li>
+               <li>Android app</li>
+             </ul>
+             </nav>
+             <nav className="navCol">
+             <p className='footerHeader'>Company</p>
+             <ul className="footerNav">
+               <li>About us</li>
+               <li>Careers</li>
+             </ul>
+             </nav>
+             <nav className="navCol">
+             <p className='footerHeader'>Resources</p>
+             <ul className="footerNav">
+               <li>FAQ</li>
+               <li>Privacy & terms</li>
+               <li>Help Center</li>
+               <li>Notice about cookie management</li>
+             </ul>
+             </nav>
+         </div>
+       </footer>)}
         {isDesktop && (
       <footer className="footer">
         <div className="containerGridForFooter">
@@ -28,69 +67,30 @@ function Footer() {
           <nav className="navCol">
             <p className='footerHeader'>Account</p>
             <ul className="footerNav">
-              <li><a className="footerLink" href="">Create account</a></li>
-              <li><a className="footerLink" href="">Sign in</a></li>
-              <li><a className="footerLink" href="">iOS app</a></li>
-              <li><a className="footerLink" href="">Android app</a></li>
+              <li>Create account</li>
+              <li>Sign in</li>
+              <li>iOS app</li>
+              <li>Android app</li>
             </ul>
             </nav>
             <nav className="navCol">
             <p className='footerHeader'>Company</p>
             <ul className="footerNav">
-              <li><a className="footerLink" href="">About us</a></li>
-              <li><a className="footerLink" href="">Careers</a></li>
+              <li>Rólunk</li>
+              <li>Karrier</li>
             </ul>
             </nav>
             <nav className="navCol">
             <p className='footerHeader'>Resources</p>
             <ul className="footerNav">
-              <li><a className="footerLink" href="">FAQ</a></li>
-              <li><a className="footerLink" href="">Privacy & terms</a></li>
-              <li><a className="footerLink" href="">Help Center</a></li>
-              <li><a className="footerLink" href="">Notice about cookie management</a></li>
+              <li>GY.I.K.</li>
+              <li>Privacy & terms</li>
+              <li>Sugóközpont</li>
+              <li>Cookiek</li>
             </ul>
             </nav>
         </div>
       </footer>)}
-      {isMobile && (
-         <footer className="footer">
-         <div className="containerGridForFooter_mobile">
-           <div className="addressColumn">
-             <p className='footerHeader'> Contact us</p>
-             <address className='contacts'>
-             <p>1000 Budapest, <br/>Nulla Street 0.<br/> Ground Floor
-              </p>
-               <p>0630 123 4567</p>
-               <p>peldaemail@pelda.com</p>
-             </address>  
-             </div>
-           <nav className="navCol">
-             <p className='footerHeader'>Account</p>
-             <ul className="footerNav">
-               <li><a className="footerLink" href="">Create account</a></li>
-               <li><a className="footerLink" href="">Sign in</a></li>
-               <li><a className="footerLink" href="">iOS app</a></li>
-               <li><a className="footerLink" href="">Android app</a></li>
-             </ul>
-             </nav>
-             <nav className="navCol">
-             <p className='footerHeader'>Company</p>
-             <ul className="footerNav">
-               <li><a className="footerLink" href="">About us</a></li>
-               <li><a className="footerLink" href="">Careers</a></li>
-             </ul>
-             </nav>
-             <nav className="navCol">
-             <p className='footerHeader'>Resources</p>
-             <ul className="footerNav">
-               <li><a className="footerLink" href="">FAQ</a></li>
-               <li><a className="footerLink" href="">Privacy & terms</a></li>
-               <li><a className="footerLink" href="">Help Center</a></li>
-               <li><a className="footerLink" href="">Notice about cookie management</a></li>
-             </ul>
-             </nav>
-         </div>
-       </footer>)}
     </>
   )
 }

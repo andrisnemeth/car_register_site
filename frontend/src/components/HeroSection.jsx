@@ -1,6 +1,6 @@
 import "../styles/HeroSection.css";
 import { useState, useEffect } from "react";
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 import heroPicture from "../assets/hero_img.png";
 import heroPictureMobile from "../assets/hero_img_mobile.png";
 import TextTransition, { presets } from "react-text-transition";
@@ -50,14 +50,21 @@ function HeroSection() {
         </div>
         <div className="hero_registration">
           <p>Regisztráció</p>
-          <Button auto rounded>Regisztráció</Button>
+          <Link href="/registration">
+            <Button auto rounded>
+              Regisztráció
+            </Button>
+          </Link>
         </div>
         <div className="hero_login">
           <p>Bejelentkezés</p>
           <Button auto rounded style={{ marginBottom: "1rem" }}>
             Bejelentkezés adminként
           </Button>
-          <Button auto rounded>Bejelentkezés felhasználóként</Button>
+
+          <Button auto rounded>
+            Bejelentkezés felhasználóként
+          </Button>
         </div>
       </div>
     </>

@@ -1,22 +1,16 @@
 import { Navbar, Link, Text, Avatar, Dropdown } from "@nextui-org/react";
-import ecarlogo from "../assets/e-car-logo.jpeg"
-import "../styles/Navbar.css"
+import ecarlogo from "../assets/e-car-logo.jpeg";
+import "../styles/Navbar.css";
 
 function Navigationbar() {
-    const collapseItems = [
-    "Profile",
-    "Dashboard",
-    "Activity",
-    "Analytics",
-    "System",
-    "Deployments",
-    "My Settings",
-    "Team Settings",
-    "Help & Feedback",
-    "Log Out",
+  const collapseItems = [
+    "Főoldal",
+    "Rólunk",
+    "Regisztráció",
+    "Bejelentkezés"
   ];
 
-  return ( 
+  return (
     <>
       <Navbar isBordered variant="sticky">
         <Navbar.Toggle showIn="xs" />
@@ -27,7 +21,13 @@ function Navigationbar() {
             },
           }}
         >
-          <img src={ecarlogo} alt='website_logo' style={{ width: '100px', height: 'auto'}}/>
+          <Link href="/">
+            <img
+              src={ecarlogo}
+              alt="website_logo"
+              style={{ width: "100px", height: "auto" }}
+            />
+          </Link>
         </Navbar.Brand>
         <Navbar.Content
           enableCursorHighlight
@@ -35,12 +35,10 @@ function Navigationbar() {
           hideIn="xs"
           variant="highlight-rounded"
         >
-          <Navbar.Link href="#">Features</Navbar.Link>
-          <Navbar.Link isActive href="#">
-            Customers
-          </Navbar.Link>
-          <Navbar.Link href="#">Pricing</Navbar.Link>
-          <Navbar.Link href="#">Company</Navbar.Link>
+          <Navbar.Link href="/">Főoldal</Navbar.Link>
+          <Navbar.Link href="/about">Rólunk</Navbar.Link>
+          <Navbar.Link href="/registration">Regisztráció</Navbar.Link>
+          <Navbar.Link href="/login">Bejelentkezés</Navbar.Link>
         </Navbar.Content>
         <Navbar.Content
           css={{
