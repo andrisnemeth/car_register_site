@@ -115,6 +115,8 @@ const FavoriteCar = sequelize.define("FavoriteCar", {
 // Define model associations
 CarType.belongsTo(CarBrand, { foreignKey: "brand_name_id" });
 CarPicture.belongsTo(FavoriteCar, { foreignKey: "favorite_car_id" });
+FavoriteCar.belongsTo(User, { foreignKey: "user_id" });
+FavoriteCar.belongsTo(CarType, { foreignKey: "type_name_id" });
 
 // Export models
 module.exports = {

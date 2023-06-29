@@ -13,7 +13,6 @@ async function getCarBrand(req, res) {
 
     res.send(data);
   } catch (error) {
-    console.log(error);
     res.sendStatus(500);
   }
 }
