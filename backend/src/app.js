@@ -17,9 +17,8 @@ app.use(express.json());
 app.get("/car_brand", CarBrandController.getCarBrand);
 app.get("/users", userController.getAllUsers);
 
-
 ///// POST
 app.post("/register", userController.registerUser);
-
+app.post("/login", userController.loginUser);
 
 module.exports = app;
