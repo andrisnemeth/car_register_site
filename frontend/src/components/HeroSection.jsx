@@ -39,13 +39,13 @@ function HeroSection() {
           )}
           <div className="text_on_hero">
             <h1 id="text_on_hero_main">
-              Legyél TE a
+              Legyen ÖN a
               <TextTransition springConfig={presets.stiff}>
                 {texts[index % texts.length]}
               </TextTransition>
               autós!
             </h1>
-            <h4>Regisztrálj vagy ha már van fiókod, jelentkezz be!</h4>
+            <h4>Regisztráljon vagy ha már van fiókja, jelentkezzen be!</h4>
           </div>
         </div>
         <div className="hero_registration">
@@ -59,11 +59,7 @@ function HeroSection() {
         <div className="hero_login">
           <p>Bejelentkezés</p>
           <Button auto rounded style={{ marginBottom: "1rem" }}>
-            Bejelentkezés adminként
-          </Button>
-
-          <Button auto rounded>
-            Bejelentkezés felhasználóként
+            Bejelentkezés
           </Button>
         </div>
       </div>

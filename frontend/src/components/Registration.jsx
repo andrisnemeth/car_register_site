@@ -1,4 +1,4 @@
-import { Button, Input, Spacer } from "@nextui-org/react";
+import { Button, Input, Spacer, Checkbox } from "@nextui-org/react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -8,6 +8,7 @@ import {
   validateMatch,
 } from "../helpers/inputFieldValidators";
 import "../styles/Registration.css";
+import { postRegister } from "../api/users";
 
 function Registration() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,8 @@ function Registration() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
+  const [typeOfUser, setTypeOfUser] = useState("");
+  const [isActive, setIsActive] = useState("");
 
   const [shakeEmail, setShakeEmail] = useState(false);
   const [shakeFullName, setShakeFullName] = useState(false);
@@ -46,7 +49,7 @@ function Registration() {
 
     return {
       text: isValid
-        ? `Üdvözöljük ${username}!`
+        ? `Megfelelően kitöltött mező!`
         : "Kérjük csak az általános formátumokat használja",
       color: isValid ? "success" : "warning",
     };
@@ -62,8 +65,8 @@ function Registration() {
 
     return {
       text: isValid
-        ? `Nice to meet you ${fullName}!`
-        : "Please only use common formats",
+        ? `Megfelelően kitöltött mező!`
+        : "Kérjük csak az általános formátumokat használja",
       color: isValid ? "success" : "warning",
     };
   }, [fullName]);
@@ -97,7 +100,7 @@ function Registration() {
     return {
       text: isMatching
         ? "A megadott jelszók egyeznek"
-        : "A megadott jelszók egyeznek",
+        : "A megadott jelszók nem egyeznek",
       color: isValidPass && isMatching ? "success" : "warning",
     };
   }, [password, passwordConf]);
@@ -164,7 +167,14 @@ function Registration() {
       validateMatch(password, passwordConf)
     ) {
       try {
-        // await postRegister({ email, fullName, username, password });
+        await postRegister({
+          email,
+          fullName,
+          username,
+          password,
+          typeOfUser,
+          isActive,
+        });
         notifySignUp();
       } catch (error) {
         if (error.message.includes("Fiók már létezik")) {
@@ -268,6 +278,19 @@ function Registration() {
             size="md"
           />
           <Spacer y={2} />
+          <Checkbox isRounded onChange={() => setIsActive(1)}>
+            Aktív
+          </Checkbox>
+          <Checkbox isRounded onChange={() => setIsActive(0)}>
+            Nem aktív
+          </Checkbox>
+          <Spacer y={2} />
+          <Checkbox isRounded onChange={() => setTypeOfUser("admin")}>
+            Admin
+          </Checkbox>
+          <Checkbox isRounded onChange={() => setTypeOfUser("user")}>
+            Felhasználó
+          </Checkbox>
         </div>
         <Button
           rounded
@@ -275,7 +298,7 @@ function Registration() {
           id="registration_submit_button"
           onPress={handleSignUp}
         >
-          Regisztrálok
+          Regisztráció
         </Button>
       </div>
     </>

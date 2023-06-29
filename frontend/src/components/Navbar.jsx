@@ -22,7 +22,7 @@ function Navigationbar() {
           }}
         >
           <Link href="/">
-            <img
+            <img className="ecarlogo"
               src={ecarlogo}
               alt="website_logo"
               style={{ width: "100px", height: "auto" }}
@@ -106,7 +106,7 @@ function Navigationbar() {
                 css={{
                   minWidth: "100%",
                 }}
-                href="#"
+                href="/"
               >
                 {item}
               </Link>
