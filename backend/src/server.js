@@ -3,7 +3,7 @@ const db = require("./db");
 const app = require("./app");
 
 app.get("/api", (req, res) => {
-  res.json({ users: ["userOne", "userTwo"] });
+  res.json();
 });
 
 app.listen(PORT, async () => {
