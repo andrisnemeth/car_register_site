@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const { generateToken } = require('../jsonwebtoken');
+const { validationResult } = require("express-validator");
 const User = require("../models/User");
 
 
@@ -14,28 +15,40 @@ async function getAllUsers(req, res) {
 }
 
 async function registerUser(req, res) {
+  console.log('Registration request received:', req.body)
+  //input validation
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
+    return res.status(400).json({ errors: errors.array() });
+  }
+  
   try {
-    const { email, username, full_name, password, type_of_user,
-      is_active } = req.body;
-
-    // Check if the username already exists in the database
+    const { email, username, fullName, password, typeOfUser,
+      isActive } = req.body;
+      console.log(req.body)
+    // Check if the email already exists in the database
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: "Az e-mail cím már foglalt" });
+    }
+
+    if (!password) {
+      return res.status(400).json({ error: "A jelszó kötelező" });
     }
 
     // Hash the e-mail and password
     const hashedUsername = await bcrypt.hash(password, 10);
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user object with the hashed password
+    // Create a new user object with the hashed username and password
     const newUser = new User({
       email,
       password: hashedPassword,
       username: hashedUsername,
-      full_name,
-      type_of_user,
-      is_active,
+      fullName,
+      typeOfUser,
+      isActive,
     });
 
     await newUser.save();

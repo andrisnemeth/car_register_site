@@ -10,7 +10,7 @@ const User = sequelize.define("User", {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    full_name: {
+    fullName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -18,11 +18,11 @@ const User = sequelize.define("User", {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    type_of_user: {
+    typeOfUser: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    is_active: {
+    isActive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true,
