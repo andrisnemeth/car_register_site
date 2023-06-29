@@ -1,15 +1,18 @@
 import { Button, Input, Spacer } from "@nextui-org/react";
 import React, { useState } from "react";
-// import React, { useContext } from "react";
+import { useContext } from "react";
 import { toast } from "react-toastify";
 import {
   validateEmail,
   validatePassword,
 } from "../helpers/inputFieldValidators";
+import { postLogin } from "../api/users";
+import { saveToken, getCurrentUser } from '../helpers/auth';
+import {UserContext} from "../contexts/UserContext";
+
 
 function Login() {
-  // const { currentUser, setCurrentUser } = useContext(UserContext);
-
+  const { setCurrentUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -26,7 +29,7 @@ function Login() {
     const isValid = validateEmail(email);
 
     return {
-      text: isValid ? "Valid email" : "Please enter a valid email address",
+      text: isValid ? "Megfelelően kitöltött mező!" : "Kérjük helyes e-mail címet adjon meg!",
       color: isValid ? "success" : "warning",
     };
   }, [email]);
@@ -40,7 +43,7 @@ function Login() {
     const isValidPass = validatePassword(password);
     return {
       text: isValidPass
-        ? "Valid password"
+        ? "Megfelelően kitöltött mező!"
         : "Please enter minimum eight characters",
       color: isValidPass ? "success" : "warning",
     };
@@ -48,12 +51,11 @@ function Login() {
 
   // Handlers
   let response;
-
-  const loginHandler = async () => {
+  const handleLogin = async () => {
     if (!email) {
       setShakeEmail(true);
       emailHelper.color = "error";
-      emailHelper.text = "Please enter your email address";
+      emailHelper.text = "Kérjük adja meg e-mail címét!";
     } else if (!validateEmail(email)) {
       setShakeEmail(true);
       emailHelper.color = "error";
@@ -61,7 +63,7 @@ function Login() {
     if (!password) {
       setShakePassword(true);
       passHelper.color = "error";
-      passHelper.text = "Please enter your password";
+      passHelper.text = "Kérjük adja meg jelszavát!";
     } else if (!validatePassword(password)) {
       setShakePassword(true);
       passHelper.color = "error";
@@ -70,28 +72,19 @@ function Login() {
     setTimeout(() => setShakePassword(false), 750);
 
     try {
-      // response = await postLogin({ email, password });
+      response = await postLogin({ email, password });
 
-      if (response) {
-        const verified = response.isVerified;
-        if (verified) {
-          // localStorage.setItem('name', response.name);
-          // localStorage.setItem('email', response.email);
-          // localStorage.setItem('token', response.token);
-          // localStorage.setItem('admin', String(response.isAdmin));
-          // setCurrentUser({
-          //   name: response.name,
-          //   email: response.email,
-          //   token: response.token,
-          //   isAdmin: response.isAdmin,
-          // });
-          notifyLoggedIn();
-        } else {
-          notifyNotVerified();
-        }
+      if (response.success) {
+        const { token } = response;
+        saveToken(token);
+
+        const currentUser = getCurrentUser();
+        setCurrentUser(currentUser);
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        notifyLoggedIn(response.fullName);
       }
-
-      return response;
     } catch (error) {
       if (error instanceof Error) {
         const errors = [];
@@ -113,21 +106,20 @@ function Login() {
     }
   };
 
-  // Notifications
-  const notifyLoggedIn = () =>
-    toast.success(`Sikeres bejelentkezés. Welcome to Fox Ticket, ${response.name}!`);
 
-  const notifyNotVerified = () =>
-    toast.warn("Please verify your email address before logging in.");
+
+  // Notifications
+  const notifyLoggedIn = (fullName) =>
+    toast.success(`Sikeres bejelentkezés. Üdvözöljük az E-CAR oldalán, ${response.fullName}!`);
 
   return (
     <>
       <div
-        className="registration_form_container"
+        className="login_form_container"
         style={{ marginBottom: "12rem" }}
       >
-        <h2 className="registration_form_headline">Bejelentkezés</h2>
-        <div className="registration_form_content">
+        <h2 className="login_form_headline">Bejelentkezés</h2>
+        <div className="login_form_content">
           <Input
             clearable
             className={shakeEmail ? "shake" : ""}
@@ -163,8 +155,8 @@ function Login() {
         <Button
           rounded
           type="submit"
-          id="registration_submit_button"
-          onPress={loginHandler}
+          id="login_admin_submit_button"
+          onPress={handleLogin}
         >
           Bejelentkezés
         </Button>
