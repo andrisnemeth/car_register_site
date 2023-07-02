@@ -1,0 +1,29 @@
+  .admin_page_container {
+    text-align: center;
+    margin: auto;
+    word-wrap: break-word;
+  }
+
+  .admin_table_column_title {
+    text-align: center;
+  }
+
+  .admin_page_button {
+    margin: auto;
+    font-size: medium;
+    font-weight: 800;
+    z-index: 1;
+  }
+
+  .admin_page_close_list_button{
+    margin: auto;
+    margin-top: 2rem;
+  }
+
+  .admin_page_req_content{
+    max-width: 50px; /* Adjust the maximum width as needed */
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+

@@ -13,6 +13,8 @@
   }
 
   #login_submit_button{
+    margin: auto;
+    margin-top: 2rem;
    font-weight: 900;
   }
 }
