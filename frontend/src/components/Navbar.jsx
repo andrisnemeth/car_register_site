@@ -1,18 +1,32 @@
-import { Navbar, Link, Text, Avatar, Dropdown } from "@nextui-org/react";
+import { Navbar, Link} from "@nextui-org/react";
+import { useState, useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { removeToken } from "../helpers/auth";
 import ecarlogo from "../assets/e-car-logo.jpeg";
 import "../styles/Navbar.css";
 
 function Navigationbar() {
+  const { currentUser } = useContext(UserContext);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  function handleLogout() {
+    removeToken();
+    setIsLoggedIn(false);
+  }
+
   const collapseItems = [
-    "Főoldal",
-    "Rólunk",
-    "Regisztráció",
-    "Bejelentkezés"
+    { label: "Főoldal", link: "/" },
+    { label: "Rólunk", link: "/about" },
+    { label: "Autónyilvántartás", link: "/car-page" },
+    { label: "Regisztráció", link: "/registration" },
+    { label: "Bejelentkezés", link: "/login" },
+    { label: "Bejelentkezés adminként", link: "/login-admin" },
+    { label: "Admin", link: "/admin" },
+    { label: "Kijelentkezés", link: "/", onClick: {handleLogout} },
   ];
 
   return (
     <>
-      <Navbar isBordered variant="sticky">
+      <Navbar isBordered variant="sticky" zindex={999}>
         <Navbar.Toggle showIn="xs" />
         <Navbar.Brand
           css={{
@@ -22,7 +36,8 @@ function Navigationbar() {
           }}
         >
           <Link href="/">
-            <img className="ecarlogo"
+            <img
+              className="ecarlogo"
               src={ecarlogo}
               alt="website_logo"
               style={{ width: "100px", height: "auto" }}
@@ -35,66 +50,35 @@ function Navigationbar() {
           hideIn="xs"
           variant="highlight-rounded"
         >
-          <Navbar.Link href="/">Főoldal</Navbar.Link>
-          <Navbar.Link href="/about">Rólunk</Navbar.Link>
-          <Navbar.Link href="/registration">Regisztráció</Navbar.Link>
-          <Navbar.Link href="/login">Bejelentkezés</Navbar.Link>
-        </Navbar.Content>
-        <Navbar.Content
-          css={{
-            "@xs": {
-              w: "12%",
-              jc: "flex-end",
-            },
-          }}
-        >
-          <Dropdown placement="bottom-right">
-            <Navbar.Item>
-              <Dropdown.Trigger>
-                <Avatar
-                  bordered
-                  as="button"
-                  color="secondary"
-                  size="md"
-                  src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                />
-              </Dropdown.Trigger>
-            </Navbar.Item>
-            <Dropdown.Menu
-              aria-label="User menu actions"
-              color="secondary"
-              onAction={(actionKey) => console.log({ actionKey })}
-            >
-              <Dropdown.Item key="profile" css={{ height: "$18" }}>
-                <Text b color="inherit" css={{ d: "flex" }}>
-                  Bejelentkezve mint:
-                </Text>
-                <Text b color="inherit" css={{ d: "flex" }}>
-                  minta_peter@example.com
-                </Text>
-              </Dropdown.Item>
-              <Dropdown.Item key="settings" withDivider>
-                Beállítások
-              </Dropdown.Item>
-              <Dropdown.Item key="team_settings">Team Settings</Dropdown.Item>
-              <Dropdown.Item key="analytics" withDivider>
-                Analytics
-              </Dropdown.Item>
-              <Dropdown.Item key="system">System</Dropdown.Item>
-              <Dropdown.Item key="configurations">Configurations</Dropdown.Item>
-              <Dropdown.Item key="help_and_feedback" withDivider>
-                Help & Feedback
-              </Dropdown.Item>
-              <Dropdown.Item key="logout" withDivider color="error">
-                Log Out
-              </Dropdown.Item>
-            </Dropdown.Menu>
-          </Dropdown>
+          {isLoggedIn && (
+            <>
+              <Navbar.Link href="/">Főoldal</Navbar.Link>
+              <Navbar.Link href="/about">Rólunk</Navbar.Link>
+              <Navbar.Link href="/admin">Admin</Navbar.Link>
+              <Navbar.Link href="/car-page">Autónyilvántartás</Navbar.Link>
+              <Navbar.Link href="/" onClick={handleLogout}>
+                Kijelentkezés
+              </Navbar.Link>
+            </>
+          )}
+          {!isLoggedIn && (
+            <>
+              <Navbar.Link href="/">Főoldal</Navbar.Link>
+              <Navbar.Link href="/about">Rólunk</Navbar.Link>
+              <Navbar.Link href="/admin">Admin</Navbar.Link>
+              <Navbar.Link href="/car-page">Autónyilvántartás</Navbar.Link>
+              <Navbar.Link href="/registration">Regisztráció</Navbar.Link>
+              <Navbar.Link href="/login">Bejelentkezés</Navbar.Link>
+              <Navbar.Link href="/login-admin">
+                Bejelentkezés adminként
+              </Navbar.Link>
+            </>
+          )}
         </Navbar.Content>
         <Navbar.Collapse>
           {collapseItems.map((item, index) => (
             <Navbar.CollapseItem
-              key={item}
+              key={index}
               activeColor="secondary"
               css={{
                 color: index === collapseItems.length - 1 ? "$error" : "",
@@ -106,9 +90,9 @@ function Navigationbar() {
                 css={{
                   minWidth: "100%",
                 }}
-                href="/"
+                href={item.link}
               >
-                {item}
+                {item.label}
               </Link>
             </Navbar.CollapseItem>
           ))}

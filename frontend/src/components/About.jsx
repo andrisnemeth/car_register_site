@@ -10,7 +10,10 @@ function AboutUs() {
   return (
     <div className="aboutus_container">
       <div className="aboutus_header">
-        <h2>Üdvözöljük az E-Car weboldalán!</h2>
+        <h2>
+          Üdvözöljük <br />
+          az E-Car weboldalán!
+        </h2>
       </div>
       <div className="aboutus_content">
         <p>
@@ -25,7 +28,9 @@ function AboutUs() {
         </p>
         <p>Főbb funkcióink közé tartozik:</p>
         <ul className="aboutus_content_list_ul">
-          <li className="aboutus_content_list_li">Regisztráció és bejelentkezés</li>
+          <li className="aboutus_content_list_li">
+            Regisztráció és bejelentkezés
+          </li>
           <p className="aboutus_content_list_p">
             Az E-Car lehetővé teszi, hogy létrehozzon egy személyes fiókot,
             regisztráljon egyedi felhasználónévvel és jelszóval. Bejelentkezés
@@ -68,19 +73,20 @@ function AboutUs() {
             <img
               src={aboutUsPictureMobile}
               alt="car"
-              style={{ maxWidth: "100%", transform: "scaleX(-1)" }} 
+              style={{ maxWidth: "100%", transform: "scaleX(-1)" }}
+              className="aboutus_img"
+            />
+          )}
+
+          {isDesktop && (
+            <img
+              src={aboutUsPicture}
+              alt="car"
+              style={{ transform: "scaleX(-1)" }}
               className="aboutus_img"
             />
           )}
         </div>
-        {isDesktop && (
-          <img
-            src={aboutUsPicture}
-            alt="car"
-            style={{ maxWidth: "100%", transform: "scaleX(-1)"}}
-            className="aboutus_img"
-          />
-        )}
       </div>
     </div>
   );

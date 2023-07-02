@@ -11,7 +11,7 @@ import { saveToken, getCurrentUser } from "../helpers/auth";
 import { UserContext } from "../contexts/UserContext";
 import "../styles/Login.css";
 
-function Login() {
+function LoginAdmin() {
   const { setCurrentUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -119,7 +119,7 @@ function Login() {
   return (
     <>
       <div className="login_form_container" style={{ marginBottom: "12rem" }}>
-        <h2 className="login_form_headline">Bejelentkezés</h2>
+        <h2 className="login_form_headline">Bejelentkezés adminként</h2>
         <div className="login_form_content">
           <Input
             clearable
@@ -165,4 +165,4 @@ function Login() {
     </>
   );
 }
-export default Login;
+export default LoginAdmin;

@@ -35,7 +35,7 @@ function HeroSection() {
             )}
           </div>
           {isDesktop && (
-            <img src={heroPicture} alt="car" style={{ maxWidth: "100%" }} />
+            <img src={heroPicture} alt="car"  />
           )}
           <div className="text_on_hero">
             <h1 id="text_on_hero_main">
@@ -58,9 +58,17 @@ function HeroSection() {
         </div>
         <div className="hero_login">
           <p>Bejelentkezés</p>
-          <Button auto rounded style={{ marginBottom: "1rem" }}>
-            Bejelentkezés
-          </Button>
+          <Link href="/login">
+            <Button auto rounded style={{ marginBottom: "1rem" }}>
+              Bejelentkezés
+            </Button>
+          </Link>
+          <br />
+          <Link href="/login-admin">
+            <Button auto rounded style={{ marginBottom: "1rem" }}>
+              Bejelentkezés adminként
+            </Button>
+          </Link>
         </div>
       </div>
     </>

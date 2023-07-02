@@ -1,4 +1,4 @@
-import { Button, Input, Spacer, Checkbox } from "@nextui-org/react";
+import { Button, Input, Spacer } from "@nextui-org/react";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import {
@@ -16,8 +16,6 @@ function Registration() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConf, setPasswordConf] = useState("");
-  const [typeOfUser, setTypeOfUser] = useState("");
-  const [isActive, setIsActive] = useState("");
 
   const [shakeEmail, setShakeEmail] = useState(false);
   const [shakeFullName, setShakeFullName] = useState(false);
@@ -172,15 +170,14 @@ function Registration() {
           fullName,
           username,
           password,
-          typeOfUser,
-          isActive,
         });
         notifySignUp();
       } catch (error) {
-        if (error.message.includes("Fiók már létezik")) {
+        console.log(error);
+        if (error.data === "Az e-mail cím már foglalt") {
           setShakeEmail(true);
           emailHelper.color = "error";
-          emailHelper.text = error.message.replace("Validation error: ", "");
+          emailHelper.text = error.message.replace("Validációs hiba: ", "");
           setTimeout(() => setShakeEmail(false), 750);
         }
       }
@@ -188,10 +185,7 @@ function Registration() {
   };
 
   // Notifications
-  const notifySignUp = () =>
-    toast.success(
-      `${email} sikeresen regisztrált! Kérjük, validálja az e-mail címét!`
-    );
+  const notifySignUp = () => toast.success(`${email} sikeresen regisztrált!`);
 
   return (
     <>
@@ -277,20 +271,7 @@ function Registration() {
             fullWidth
             size="md"
           />
-          <Spacer y={2} />
-          <Checkbox isRounded onChange={() => setIsActive(1)}>
-            Aktív
-          </Checkbox>
-          <Checkbox isRounded onChange={() => setIsActive(0)}>
-            Nem aktív
-          </Checkbox>
-          <Spacer y={2} />
-          <Checkbox isRounded onChange={() => setTypeOfUser("admin")}>
-            Admin
-          </Checkbox>
-          <Checkbox isRounded onChange={() => setTypeOfUser("user")}>
-            Felhasználó
-          </Checkbox>
+          <Spacer y={2.5} />
         </div>
         <Button
           rounded
