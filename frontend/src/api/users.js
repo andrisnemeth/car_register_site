@@ -1,11 +1,11 @@
-import { AxiosError } from "axios";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import jwt_decode from "jwt-decode";
 
 export async function fetchUsers() {
   const response = await axios.get("http://localhost:8000/users");
-  console.log(response.data);
   return response.data;
 }
+
 
 export async function postRegister(userData) {
   try {
@@ -14,10 +14,37 @@ export async function postRegister(userData) {
       fullName: userData.fullName,
       username: userData.username,
       password: userData.password,
-      typeOfUser: userData.typeOfUser,
-      isActive: userData.isActive,
+      typeOfUser: "user",
+      isActive: 1,
     });
     return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response);
+      console.log(error.response?.data.error);
+      throw new Error(error.response?.data.error);
+    }
+  }
+}
+
+export async function postLogin(credentials) {
+  console.log(credentials);
+
+  try {
+    const response = await axios.post(
+      "http://localhost:8000/login",
+      credentials
+    );
+    if (response.status === 200) {
+      const data = response.data;
+      const userId = data.userId;
+
+      localStorage.setItem("userId", userId);
+      console.log(localStorage.getItem('userId'))
+
+      console.log( { responseData: data, userId})
+      return { responseData: data, userId} 
+    }
   } catch (error) {
     if (error instanceof AxiosError) {
       console.log(error);
@@ -26,14 +53,24 @@ export async function postRegister(userData) {
   }
 }
 
-
-export async function postLogin(credentials) {
-  console.log(credentials)
+export async function postLoginAdmin(credentials) {
+  console.log(credentials);
 
   try {
-    const response = await axios.post('http://localhost:8000/login', credentials);
-    console.log(response.data)
-    return response.data;
+    const response = await axios.post(
+      "http://localhost:8000/login-admin",
+      credentials
+    );
+    if (response.status === 200) {
+      const data = response.data;
+      const userId = data.userId;
+
+      localStorage.setItem("userId", userId);
+      console.log(localStorage.getItem('userId'))
+
+      console.log( { responseData: data, userId})
+      return { responseData: data, userId} 
+    }
   } catch (error) {
     if (error instanceof AxiosError) {
       console.log(error);
