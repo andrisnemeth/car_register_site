@@ -1,5 +1,4 @@
 import axios, { AxiosError } from "axios";
-import jwt_decode from "jwt-decode";
 
 
 //fetch users for list
