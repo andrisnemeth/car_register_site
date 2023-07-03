@@ -44,11 +44,14 @@ function CarManagement() {
           setTypes(data);
         })
         .catch((error) => {
-          console.error(`Error fetching car types for brand ${selectedBrand}:`, error);
+          console.error(
+            `Error fetching car types for brand ${selectedBrand}:`,
+            error
+          );
         });
     }
   }, [selectedBrand]);
-  
+
   // Helper
   const brandNameHelper = React.useMemo(() => {
     if (!brandName)
@@ -147,6 +150,7 @@ function CarManagement() {
   };
 
   const closeModalHandler = () => {
+    setAddNewBrandModalVisible(false);
     setAddNewTypeModalVisible(false);
     setTypeName("");
   };
@@ -275,9 +279,9 @@ function CarManagement() {
         </Modal>
         <form onSubmit={handleSubmit} id="car_management_form">
           <div>
-            <label>Brand:</label>
+            <label>Márkanév:</label>
             <select value={selectedBrand} onChange={handleBrandChange}>
-              <option value="">Select brand</option>
+              <option value="">Válasszon márkát</option>
               {brands.length > 0 ? (
                 brands.map((brand, index) => (
                   <option key={index} value={brand.id}>
@@ -308,7 +312,7 @@ function CarManagement() {
             </select>
           </div>
           <div>
-            <label>Year:</label>
+            <label>Évjárat:</label>
             <input
               type="number"
               value={year}
@@ -316,7 +320,7 @@ function CarManagement() {
             />
           </div>
           <div>
-            <label>Color:</label>
+            <label>Szín:</label>
             <input
               type="text"
               value={color}
@@ -324,7 +328,7 @@ function CarManagement() {
             />
           </div>
           <div>
-            <label>Fuel Type:</label>
+            <label>Üzemanyag típusa:</label>
             <input
               type="text"
               value={fuelType}
