@@ -7,7 +7,7 @@ import {
   validatePassword,
 } from "../helpers/inputFieldValidators";
 import { postLogin } from "../api/users";
-import { saveToken, getCurrentUser } from "../helpers/auth";
+import { saveToken, getCurrentUser, storeAuthData } from "../helpers/auth";
 import { UserContext } from "../contexts/UserContext";
 import "../styles/Login.css";
 
@@ -75,13 +75,17 @@ function LoginAdmin() {
 
     try {
       response = await postLogin({ email, password });
-      console.log(response.responseData);
+      console.log(response.responseData.token);
       if (response.responseData.success) {
-        const { token, userId } = response.responseData;
+        const { token } = response.responseData.token;
+        const { userId } = response.responseData.userId;
+
         saveToken(token);
+        storeAuthData(token, userId);
         localStorage.setItem("userId", userId);
+        localStorage.setItem("token", token);
         console.log(token, userId);
-        
+
         const currentUser = getCurrentUser();
         setCurrentUser(currentUser);
 

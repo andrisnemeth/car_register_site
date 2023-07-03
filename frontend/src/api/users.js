@@ -1,12 +1,14 @@
 import axios, { AxiosError } from "axios";
 import jwt_decode from "jwt-decode";
 
+
+//fetch users for list
 export async function fetchUsers() {
   const response = await axios.get("http://localhost:8000/users");
   return response.data;
 }
 
-
+//registration
 export async function postRegister(userData) {
   try {
     const response = await axios.post("http://localhost:8000/register", {
@@ -26,7 +28,7 @@ export async function postRegister(userData) {
     }
   }
 }
-
+//login
 export async function postLogin(credentials) {
   console.log(credentials);
 
@@ -40,10 +42,10 @@ export async function postLogin(credentials) {
       const userId = data.userId;
 
       localStorage.setItem("userId", userId);
-      console.log(localStorage.getItem('userId'))
+      console.log(localStorage.getItem("userId"));
 
-      console.log( { responseData: data, userId})
-      return { responseData: data, userId} 
+      console.log({ responseData: data, userId });
+      return { responseData: data, userId };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
@@ -52,7 +54,7 @@ export async function postLogin(credentials) {
     }
   }
 }
-
+//loginadmin
 export async function postLoginAdmin(credentials) {
   console.log(credentials);
 
@@ -66,15 +68,28 @@ export async function postLoginAdmin(credentials) {
       const userId = data.userId;
 
       localStorage.setItem("userId", userId);
-      console.log(localStorage.getItem('userId'))
+      console.log(localStorage.getItem("userId"));
 
-      console.log( { responseData: data, userId})
-      return { responseData: data, userId} 
+      console.log({ responseData: data, userId });
+      return { responseData: data, userId };
     }
   } catch (error) {
     if (error instanceof AxiosError) {
       console.log(error);
       throw new Error(error.response?.data.message);
     }
+  }
+}
+
+//logout
+export async function postLogout() {
+  try {
+    const response = await axios.post("http://localhost:8000/logout");
+    if (response.status === 200) {
+      localStorage.removeItem("userId");
+      localStorage.removeItem("token");
+    }
+  } catch (error) {
+    console.log(error);
   }
 }

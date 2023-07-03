@@ -9,6 +9,7 @@ import Navigationbar from "./Navbar";
 import Registration from "./Registration";
 import CarManagement from "./CarManagement"
 import LoginAdmin from "./LoginAdmin";
+import NotImplementedPage from "./NotImplementedPage";
 
 function App() {
   const storedUser = localStorage.getItem("currentUser");
@@ -31,6 +32,7 @@ function App() {
         />
         <Route path="/login-admin" element={<LoginAdmin />} />
         <Route path="/about" element={<AboutUs />} />
+        <Route path="*" element={<NotImplementedPage />} />
       </Routes>
       <Footer />
     </>

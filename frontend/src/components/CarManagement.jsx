@@ -3,23 +3,29 @@ import { Button, Modal, Input, Text, Spacer } from "@nextui-org/react";
 import {
   fetchCarBrands,
   fetchCarTypes,
+  fetchSelectedCarTypes,
   saveCarData,
   addNewCarBrand,
+  addNewCarType,
 } from "../api/carManagement";
 import { validateBrandName } from "../helpers/inputFieldValidators";
 
 function CarManagement() {
   const [isAdmin, setIsAdmin] = useState(true);
+  //brand states
+  const [brands, setBrands] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState(0);
   const [brandName, setBrandName] = useState("");
   const [shakeBrandName, setShakeBrandName] = useState(false);
   const [addNewBrandModalVisible, setAddNewBrandModalVisible] = useState(false);
   const [brandsCount, setBrandsCount] = useState(0);
-  const [addNewTypeModalVisible, setAddNewTypeModalVisible] = useState(false);
-
-  const [brands, setBrands] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [carTypes, setCarTypes] = useState([]);
+  // type states
+  const [types, setTypes] = useState([]);
   const [selectedType, setSelectedType] = useState("");
+  const [typeName, setTypeName] = useState("");
+  const [shakeTypeName, setShakeTypeName] = useState(false);
+  const [addNewTypeModalVisible, setAddNewTypeModalVisible] = useState(false);
+  //year, color, fuel, image states
   const [year, setYear] = useState(0);
   const [color, setColor] = useState("");
   const [fuelType, setFuelType] = useState("");
@@ -32,6 +38,18 @@ function CarManagement() {
     });
   }, [brandsCount]);
 
+  useEffect(() => {
+    if (selectedBrand) {
+      fetchSelectedCarTypes(selectedBrand)
+        .then((data) => {
+          setTypes(data);
+        })
+        .catch((error) => {
+          console.error(`Error fetching car types for brand ${selectedBrand}:`, error);
+        });
+    }
+  }, [selectedBrand]);
+  
   // Helper
   const brandNameHelper = React.useMemo(() => {
     if (!brandName)
@@ -48,27 +66,50 @@ function CarManagement() {
     };
   }, [brandName]);
 
+  const typeNameHelper = React.useMemo(() => {
+    if (!typeName)
+      return {
+        text: "",
+        color: "default",
+      };
+    const isValid = validateBrandName(typeName);
+    return {
+      text: isValid
+        ? `Megfelelően kitöltött mező!`
+        : "Kérjük csak az általános formátumokat használja",
+      color: isValid ? "success" : "warning",
+    };
+  }, [typeName]);
+
   //Handlers
-  const handleBrandClick = (event) => {};
-
   const handleBrandChange = (event) => {
-    const selectedBrand = event.target.value;
-    setSelectedBrand(selectedBrand);
-
-    fetchCarTypes(selectedBrand)
-      .then((response) => {
-        setCarTypes(response.data);
-      })
-      .catch((error) => {
-        console.error(
-          `Error fetching car types for brand ${selectedBrand}:`,
-          error
-        );
-      });
+    const brandId = event.target.value;
+    setSelectedBrand(parseInt(brandId));
+    setSelectedType("");
   };
 
+  // console.log(selectedBrand);
+  // const filteredBrandId = selectedBrand
   const handleTypeChange = (event) => {
-    setSelectedType(event.target.value);
+    const brandNameId = parseInt(event.target.value);
+
+    if (!brandNameId) {
+      setTypes([]);
+      setSelectedType("");
+    } else {
+      fetchSelectedCarTypes(brandNameId)
+        .then((response) => {
+          console.log(response);
+          setTypes(response);
+          setSelectedType(response.length > 0 ? response[0].id : "");
+        })
+        .catch((error) => {
+          console.error(
+            `Error fetching car types for brand ${brandNameId}:`,
+            error
+          );
+        });
+    }
   };
 
   const handleAddNewBrand = async () => {
@@ -89,9 +130,26 @@ function CarManagement() {
     }
   };
 
+  const handleAddNewType = async () => {
+    if (typeName.length === 0) {
+      setShakeTypeName(true);
+      typeNameHelper.color = "error";
+      typeNameHelper.text = "Kérjük tölse ki ezt a mezőt";
+    }
+    if (validateBrandName(typeName)) {
+      try {
+        await addNewCarType({
+          typeName,
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   const closeModalHandler = () => {
-    setAddNewBrandModalVisible(false);
-    setBrandName("");
+    setAddNewTypeModalVisible(false);
+    setTypeName("");
   };
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -177,27 +235,77 @@ function CarManagement() {
             Hozzáadás
           </Button>
         </div>
+        <Modal
+          closeButton
+          blur
+          aria-labelledby="modal-title"
+          open={addNewTypeModalVisible}
+          onClose={closeModalHandler}
+        >
+          <Modal.Header>
+            <Text id="modal-title" size={18}>
+              Új típus
+            </Text>
+          </Modal.Header>
+          <Modal.Body>
+            <Input
+              clearable
+              className={shakeTypeName ? "shake" : ""}
+              onChange={(e) => setTypeName(e.target.value)}
+              required
+              bordered
+              status={typeNameHelper.color}
+              color={typeNameHelper.color}
+              helperColor={typeNameHelper.color}
+              helperText={typeNameHelper.text}
+              fullWidth
+              size="md"
+              placeholder="Típus:"
+              aria-labelledby="Típus"
+            />
+            <Spacer y={1} />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button auto rounded flat color="error" onPress={closeModalHandler}>
+              Bezárás
+            </Button>
+            <Button auto rounded onPress={handleAddNewType}>
+              Hozzáadás
+            </Button>
+          </Modal.Footer>
+        </Modal>
         <form onSubmit={handleSubmit} id="car_management_form">
           <div>
             <label>Brand:</label>
             <select value={selectedBrand} onChange={handleBrandChange}>
               <option value="">Select brand</option>
-              {brands.map((brand, index) => (
-                <option key={index} value={brand.id}>
-                  {brand.brandName}
+              {brands.length > 0 ? (
+                brands.map((brand, index) => (
+                  <option key={index} value={brand.id}>
+                    {brand.brandName}
+                  </option>
+                ))
+              ) : (
+                <option value="">
+                  Nincs elérhető márka, kérjük vegye fel a kapcsolatot a
+                  support-tal
                 </option>
-              ))}
+              )}
             </select>
           </div>
           <div>
-            <label>Type:</label>
-            <select value={selectedType} onChange={handleTypeChange}>
-              <option value="">Select type</option>
-              {carTypes.map((type, index) => (
-                <option key={index} value={type}>
-                  {type}
-                </option>
-              ))}
+            <label>Típus:</label>
+            <select
+              value={selectedType}
+              onChange={(event) => handleTypeChange(event)}
+            >
+              <option value="">Válasszon típust</option>
+              {types &&
+                types.map((type, index) => (
+                  <option key={index} value={type.id}>
+                    {type.typeName}
+                  </option>
+                ))}
             </select>
           </div>
           <div>

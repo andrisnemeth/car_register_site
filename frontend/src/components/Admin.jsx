@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 import "../styles/Admin.css";
 import { addNewReq } from "../api/userReqs";
 import Home from "./Home";
+import { getAuthData } from "../helpers/auth";
 
 function Admin() {
   //Modal visibility
@@ -30,6 +31,8 @@ function Admin() {
     useState(false);
   // Lists
   const [users, setUsers] = useState([]);
+  const [usersCount, setUsersCount] = useState(0);
+  const [reqsCount, setReqsCount] = useState(0);
   const [isUserListVisible, setIsUserListVisible] = useState(false);
   const [userReqs, setUserReqs] = useState([]);
   const [isUserReqListVisible, setIsUserReqListVisible] = useState(false);
@@ -50,7 +53,6 @@ function Admin() {
   const [shakePassword, setShakePassword] = useState(false);
   const [shakePasswordConf, setShakePasswordConf] = useState(false);
   const [shakeReqContent, setShakeReqContent] = useState(false);
-  
 
   //helpers
   const emailHelper = React.useMemo(() => {
@@ -133,6 +135,22 @@ function Admin() {
     };
   }, [password, passwordConf]);
 
+  const reqContentHelper = React.useMemo(() => {
+    if (!reqContent)
+      return {
+        text: "",
+        color: "default",
+      };
+    const isValidReqContent = validatePassword(reqContent);
+
+    return {
+      text: isValidReqContent
+        ? "Megfelelő jelszó"
+        : "Kérjük, adjon meg legalább nyolc karaktert, amiben található legalább egy kisbetű, nagybetű, szám és különleges karakter",
+      color: isValidReqContent ? "success" : "warning",
+    };
+  }, [reqContent]);
+
   // Notification
   const notifySignUp = () => toast.success(`${email} sikeres regisztráció!`);
 
@@ -207,6 +225,7 @@ function Admin() {
         });
 
         notifySignUp();
+        setUsersCount((prevCount) => prevCount + 1);
       } catch (error) {
         if (error.message.includes("Fiók már létezik")) {
           setShakeEmail(true);
@@ -219,15 +238,22 @@ function Admin() {
   };
 
   const handleAddNewReq = async () => {
-    console.log(localStorage.getItem('userId'))
+    console.log(localStorage.getItem("userId"));
+    if (reqContent.length === 0) {
+      setShakeReqContent(true);
+      reqContentHelper.color = "error";
+      reqContentHelper.text = "Kérjük tölse ki ezt a mezőt";
+    }
+    setTimeout(() => setShakeUsername(false), 750);
     try {
-      const userId = localStorage.getItem('userId')
+      const userId = localStorage.getItem("userId");
       await addNewReq({
         uploadingUserId: userId,
         reqContent,
       });
+      setReqsCount((prevCount) => prevCount + 1);
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   };
 
@@ -257,12 +283,16 @@ function Admin() {
     fetchUsers().then((data) => {
       setUsers(data);
     });
-  }, []);
+  }, [usersCount]);
 
   useEffect(() => {
     fetchUserReqs().then((data) => {
       setUserReqs(data);
     });
+  }, [reqsCount]);
+
+  useEffect(() => {
+    getAuthData();
   }, []);
 
   //List visibility
@@ -275,11 +305,11 @@ function Admin() {
     setIsUserReqListVisible(!isUserReqListVisible);
   };
 
-  const userId = localStorage.getItem('userId');
+  const userId = localStorage.getItem("userId");
   if (!userId) {
-    // Redirect or show a loading screen until the userId is available
     return <Home />;
   }
+
   return (
     <div className="admin_page_container">
       <h1>Admin felület</h1>
@@ -385,10 +415,20 @@ function Admin() {
             size="md"
           />
           <Spacer y={0.5} />
-          <Checkbox size="xs" isRounded onChange={() => setTypeOfUser("admin")} checked={typeOfUser === "admin"}>
+          <Checkbox
+            size="xs"
+            isRounded
+            onChange={() => setTypeOfUser("admin")}
+            checked={typeOfUser === "admin"}
+          >
             Admin
           </Checkbox>
-          <Checkbox size="xs" isRounded onChange={() => setTypeOfUser("user")} checked={typeOfUser === "user"}>
+          <Checkbox
+            size="xs"
+            isRounded
+            onChange={() => setTypeOfUser("user")}
+            checked={typeOfUser === "user"}
+          >
             Felhasználó
           </Checkbox>
         </Modal.Body>
@@ -513,6 +553,7 @@ function Admin() {
               minWidth: "100%",
               textAlign: "start",
               wordWrap: "break-word",
+              zIndex: "1",
             }}
             color="primary"
             selectionMode="single"

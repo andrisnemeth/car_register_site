@@ -1,5 +1,5 @@
 import axios from "axios";
-import { getCurrentUser, getCurrentUserId } from "../helpers/auth";
+import { getAuthData } from "../helpers/auth";
 
 export async function fetchUserReqs() {
   const response = await axios.get("http://localhost:8000/user-reqs");
@@ -7,14 +7,14 @@ export async function fetchUserReqs() {
 }
 
 export async function addNewReq(reqData) {
-  console.log(reqData);
-
   try {
-    const userId = getCurrentUserId();
-    localStorage.setItem("userId", userId);
+    const userId = localStorage.getItem("userId");
+    console.log(localStorage)
 
-    const token = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
     console.log(token, userId);
+
+    getAuthData();
 
     const dateATM = new Date().toLocaleString();
     const response = await axios.post("http://localhost:8000/user-reqs", {

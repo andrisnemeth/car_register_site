@@ -1,12 +1,13 @@
+// import {useContext } from "react";
+// import { UserContext } from "../contexts/UserContext";
 import { Navbar, Link} from "@nextui-org/react";
-import { useState, useContext } from "react";
-import { UserContext } from "../contexts/UserContext";
+import { useState } from "react"; 
 import { removeToken } from "../helpers/auth";
 import ecarlogo from "../assets/e-car-logo.jpeg";
 import "../styles/Navbar.css";
 
 function Navigationbar() {
-  const { currentUser } = useContext(UserContext);
+  // const { currentUser } = useContext(UserContext);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   function handleLogout() {
     removeToken();
