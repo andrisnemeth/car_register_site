@@ -1,0 +1,58 @@
+@media only screen and (max-width: 600px) {
+  .car_data_form_container {
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    width: 60%;
+    background-color: white;
+  }
+
+  .car_data_form_headline {
+    margin: 3rem 0;
+  }
+  .car_data_form_content {
+    position: relative;
+    margin: auto;
+  }
+
+  .car_data_add_new_button {
+    margin: auto;
+  }
+
+  .car_data_form_select_label{
+    margin-right: 1.5rem;
+    text-align: left;
+  }
+
+  #car_data_submit_button {
+    margin: auto;
+    margin-top: 3rem;
+    font-weight: 900;
+  }
+}
+
+@media only screen and (min-width: 600px) {
+  .car_data_form_container {
+    margin: auto;
+    justify-content: center;
+    text-align: center;
+    position: relative;
+    width: 30%;
+    background-color: white;
+  }
+
+  .car_data_form_headline {
+    margin: 3rem 0;
+  }
+
+  .car_data_add_new_button {
+    margin: auto;
+  }
+
+  #car_data_submit_button {
+    margin: auto;
+    margin-top: 3rem;
+    font-weight: 900;
+  }
+}
