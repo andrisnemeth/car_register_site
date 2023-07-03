@@ -7,13 +7,13 @@ import Home from "./Home";
 import Login from "./Login";
 import Navigationbar from "./Navbar";
 import Registration from "./Registration";
-import CarManagement from "./CarManagement"
+import CarManagement from "./CarManagement";
 import LoginAdmin from "./LoginAdmin";
 import NotImplementedPage from "./NotImplementedPage";
 
 function App() {
   const storedUser = localStorage.getItem("currentUser");
-  const [currentUser, setCurrentUser] = React.useState(JSON.parse(storedUser));
+  const [currentUser] = React.useState(JSON.parse(storedUser));
 
   return (
     <>
@@ -28,7 +28,9 @@ function App() {
         />
         <Route
           path="/car-page"
-          element={currentUser ? <CarManagement /> : <Navigate to="/login" replace />}
+          element={
+            currentUser ? <CarManagement /> : <Navigate to="/login" replace />
+          }
         />
         <Route path="/login-admin" element={<LoginAdmin />} />
         <Route path="/about" element={<AboutUs />} />
