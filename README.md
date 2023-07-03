@@ -4,7 +4,7 @@ Car Register Site is a web application that allows users to manage car-related i
 
 Installation
 
-Clone the repository: git clone https://github.com/your-username/car-register-site.git
+Clone the repository: git clone https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
 Change to the project directory: cd car-register-site
 Install dependencies: npm install
 Configuration
@@ -17,16 +17,11 @@ DB_NAME: The name of your MySQL database.
 DB_USERNAME: The username to access your MySQL database.
 DB_PASSWORD: The password to access your MySQL database.
 JWT_SECRET: A secret key used for JWT token generation.
-Database Setup
 
-Create the necessary database tables by running the following command: npx sequelize-cli db:migrate.
 Usage
 
-Start the server: npm start.
-Access the API endpoints using a tool like Postman or any other HTTP client.
-API Documentation
-
-For detailed information on the available API endpoints and their usage, please refer to the API Documentation.
+Start the frontend server in the frontend directory: npm start.
+Start the backend server in the backend directory: npm run dev.
 
 Contributing
 
