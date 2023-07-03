@@ -1,26 +1,32 @@
 const { DataTypes } = require("sequelize");
+const sequelize = require("../db");
 const CarBrand = require("./CarBrand");
 
-module.exports = (sequelize) => {
-  const CarType = sequelize.define("CarType", {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    brand_name_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    type_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+const CarType = sequelize.define("CarType", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
+  brandNameId: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  typeName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+});
+
+CarType.associate = (models) => {
+  CarType.belongsTo(models.CarBrand, {
+    foreignKey: "brandNameId",
+    as: "CarBrand",
   });
-
-  CarType.associate = (models) => {
-    CarType.belongsTo(models.CarBrand, { foreignKey: "brand_name_id", as: "CarBrand" });
-  };
-
-  return CarType;
+  CarType.hasMany(models.FavoriteCar, {
+    foreignKey: "typeNameId",
+    as: "CarType",
+  });
 };
+
+module.exports = CarType;

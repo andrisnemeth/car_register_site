@@ -1,27 +1,48 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
 const { registrationValidationRules } = require("./expressValidation");
+const { addNewCarBrandValidationRules } = require("./expressValidation");
+
+// controller imports
 const userController = require("./controllers/userController");
-const CarBrandController = require("./controllers/CarBrandController");
+const userReqController = require("./controllers/userReqController");
+const carManagementController = require("./controllers/carManagementController");
+//model imports
 require("./models/CarBrand");
 require("./models/CarType");
 require("./models/CarPicture");
 require("./models/FavoriteCar");
 require("./models/User");
+require("./models/UserReq");
+// const { verifyToken } = require("./jsonwebtoken");
 
-app.use(cors({
-  origin: 'http://localhost:3000'
-}));
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+  })
+);
 app.use(express.json());
-// app.use(loggingMiddleware({ logger }));
 
 ///// GET
-app.get("/car_brand", CarBrandController.getCarBrand);
 app.get("/users", userController.getAllUsers);
+app.get("/user-reqs", userReqController.getAllUserReqs);
+app.get("/car-brand", carManagementController.getCarBrand);
+app.get("/car-brands", carManagementController.getAllCarBrands);
+app.get("/car-types", carManagementController.getAllCarTypes);
+app.get("/car-types-selected", carManagementController.getSelectedCarTypes);
 
 ///// POST
 app.post("/register", registrationValidationRules, userController.registerUser);
 app.post("/login", userController.loginUser);
+app.post("/logout", userController.postLogout);
+app.post("/user-reqs", userReqController.addNewReq);
+app.post(
+  "/car-brands",
+  addNewCarBrandValidationRules,
+  carManagementController.addNewCarBrand
+);
+app.post("/car-types", carManagementController.addNewCarType);
 
 module.exports = app;

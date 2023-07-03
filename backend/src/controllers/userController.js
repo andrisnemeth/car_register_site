@@ -1,8 +1,7 @@
 const bcrypt = require("bcrypt");
-const { generateToken } = require('../jsonwebtoken');
+const { generateToken } = require("../jsonwebtoken");
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
-
 
 async function getAllUsers(req, res) {
   try {
@@ -15,19 +14,18 @@ async function getAllUsers(req, res) {
 }
 
 async function registerUser(req, res) {
-  console.log('Registration request received:', req.body)
+  console.log("Registration request received:", req.body);
   //input validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    console.log('Validation errors:', errors.array());
+    console.log("Validation errors:", errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
-  
+
   try {
-    const { email, username, fullName, password, typeOfUser,
-      isActive } = req.body;
-      console.log(req.body)
-    // Check if the email already exists in the database
+    const { email, username, fullName, password, typeOfUser, isActive } =
+      req.body;
+    // Checking if the email already exists in the database
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ error: "Az e-mail cím már foglalt" });
@@ -54,7 +52,7 @@ async function registerUser(req, res) {
     await newUser.save();
 
     const token = generateToken(newUser._id);
-    return res.status(201).json({ message: "Sikeresen regisztrált!", token  });
+    return res.status(201).json({ message: "Sikeresen regisztrált!", token });
   } catch (error) {
     console.log(error);
     res.sendStatus(500);
@@ -66,16 +64,39 @@ async function loginUser(req, res) {
 
   const existingUser = await User.findOne({ where: { email } });
   if (!existingUser) {
-    return res.status(400).json({ error: 'Az e-mail cím vagy jelszó hibás' });
+    return res.status(400).json({ error: "Az e-mail cím vagy jelszó hibás" });
   }
 
   const passwordMatch = await bcrypt.compare(password, existingUser.password);
   if (!passwordMatch) {
-    return res.status(400).json({ error: 'Az e-mail cím vagy jelszó hibás' });
+    return res.status(400).json({ error: "Az e-mail cím vagy jelszó hibás" });
   }
-
-  const token = generateToken({ userId: existingUser._id });
-  return res.status(200).json({ message: 'Sikeres bejelentkezés!', token });
+  // Get the user's ID from the existingUser object
+  const userId = existingUser.id;
+  const token = generateToken({ userId });
+  return res
+    .status(200)
+    .json({ message: "Sikeres bejelentkezés!", token, userId });
 }
 
-module.exports = { getAllUsers, registerUser, loginUser};
+async function postLogout(req, res) {
+  try {
+    // Clear user session data
+    req.session.destroy();
+
+    // Revoke access token
+    const token = req.headers.authorization.split(" ")[1];
+
+    // Clear client-side authentication token if the token is stored as a cookie
+    res.clearCookie("token");
+
+    // Redirect to the logout page or the login page
+    res.redirect("/logout");
+    return res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    console.error("Error during logout:", error);
+    res.sendStatus(500);
+  }
+}
+
+module.exports = { getAllUsers, registerUser, loginUser, postLogout };

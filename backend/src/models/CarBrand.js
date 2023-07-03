@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const sequelize = require("../db");
+const CarType = require('./CarType');
 
 const CarBrand = sequelize.define("CarBrand", {
   id: {
@@ -8,10 +9,14 @@ const CarBrand = sequelize.define("CarBrand", {
     primaryKey: true,
     autoIncrement: true,
   },
-  brand_name: {
+  brandName: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
+
+CarBrand.associate = (models) => {
+  CarBrand.hasMany(models.CarType, { foreignKey: 'brandNameId', as: 'types' });
+};
 
 module.exports = CarBrand;
