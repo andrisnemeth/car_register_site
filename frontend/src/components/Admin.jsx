@@ -16,6 +16,7 @@ import {
   validatePassword,
   validateName,
   validateMatch,
+  validateLongText,
 } from "../helpers/inputFieldValidators";
 import { postRegister } from "../api/users";
 import { toast } from "react-toastify";
@@ -141,12 +142,12 @@ function Admin() {
         text: "",
         color: "default",
       };
-    const isValidReqContent = validatePassword(reqContent);
+    const isValidReqContent = validateLongText(reqContent);
 
     return {
       text: isValidReqContent
-        ? "Megfelelő jelszó"
-        : "Kérjük, adjon meg legalább nyolc karaktert, amiben található legalább egy kisbetű, nagybetű, szám és különleges karakter",
+        ? "Megfelelően kitöltött mező"
+        : "Kérjük, adjon meg legalább 1 karaktert. Maximum karakterszám 255.",
       color: isValidReqContent ? "success" : "warning",
     };
   }, [reqContent]);
@@ -244,16 +245,19 @@ function Admin() {
       reqContentHelper.color = "error";
       reqContentHelper.text = "Kérjük tölse ki ezt a mezőt";
     }
-    setTimeout(() => setShakeUsername(false), 750);
-    try {
-      const userId = localStorage.getItem("userId");
-      await addNewReq({
-        uploadingUserId: userId,
-        reqContent,
-      });
-      setReqsCount((prevCount) => prevCount + 1);
-    } catch (error) {
-      console.log(error);
+    setTimeout(() => setShakeReqContent(false), 750);
+
+    if (validateLongText(reqContent)) {
+      try {
+        const userId = localStorage.getItem("userId");
+        await addNewReq({
+          uploadingUserId: userId,
+          reqContent,
+        });
+        setReqsCount((prevCount) => prevCount + 1);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -276,6 +280,7 @@ function Admin() {
     setUploadingUserId();
     setReqContent("");
     setDatePosted("");
+    reqContentHelper.text = "";
   };
 
   //Render Lists
@@ -517,12 +522,16 @@ function Admin() {
         <Modal.Body>
           <Input
             clearable
+            className={shakeReqContent ? "shake" : ""}
             onChange={(e) => setReqContent(e.target.value)}
             required
             bordered
             fullWidth
             size="md"
-            color="primary"
+            status={reqContentHelper.color}
+            color={reqContentHelper.color}
+            helperColor={reqContentHelper.color}
+            helperText={reqContentHelper.text}
             placeholder="Felhasználói észrevétel:"
             aria-labelledby="Felhasználói észrevétel"
           />
