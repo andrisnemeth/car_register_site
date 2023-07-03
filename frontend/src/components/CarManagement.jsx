@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Button, Modal, Input, Text, Spacer } from "@nextui-org/react";
 import {
   fetchCarBrands,
-  fetchCarTypes,
   fetchSelectedCarTypes,
   saveCarData,
   addNewCarBrand,
