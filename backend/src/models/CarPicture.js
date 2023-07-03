@@ -12,7 +12,7 @@ const CarPicture = sequelize.define("CarPicture", {
     allowNull: false,
   },
   pictureContent: {
-    type: DataTypes.STRING.BINARY,
+    type: DataTypes.BLOB("long"),
     allowNull: true,
   },
 });

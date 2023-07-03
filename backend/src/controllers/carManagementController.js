@@ -1,6 +1,8 @@
 const CarBrand = require("../models/CarBrand");
 const CarType = require("../models/CarType");
+const CarPicture = require("../models/CarPicture");
 const { validationResult } = require("express-validator");
+const multer = require("multer");
 
 //CarBrand
 async function getCarBrand(req, res) {
@@ -109,6 +111,24 @@ async function addNewCarType(req, res) {
   }
 }
 
+async function uploadCarPicture(req, res) {
+  try {
+    const { favoriteCarId } = req.body;
+    const fileBuffer = req.file.buffer;
+
+    const carPicture = await CarPicture.create({
+      favoriteCarId,
+      pictureContent: fileBuffer,
+    });
+
+    res.status(201).json({ carPicture });
+  } catch (error) {
+    console.error("Error uploading car picture:", error);
+    res.status(500).json({ error: "Failed to upload car picture" });
+  }
+}
+
+
 module.exports = {
   getCarBrand,
   getAllCarBrands,
@@ -116,4 +136,5 @@ module.exports = {
   getAllCarTypes,
   getSelectedCarTypes,
   addNewCarType,
+  uploadCarPicture,
 };

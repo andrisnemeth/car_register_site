@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+const storage = require("./storage");
+const multer = require("multer");
+const upload = multer({ storage });
 
 const { registrationValidationRules } = require("./expressValidation");
 const { addNewCarBrandValidationRules } = require("./expressValidation");
@@ -9,6 +12,8 @@ const { addNewCarBrandValidationRules } = require("./expressValidation");
 const userController = require("./controllers/userController");
 const userReqController = require("./controllers/userReqController");
 const carManagementController = require("./controllers/carManagementController");
+const { uploadCarPicture } = require("./controllers/carManagementController");
+
 //model imports
 require("./models/CarBrand");
 require("./models/CarType");
@@ -44,5 +49,6 @@ app.post(
   carManagementController.addNewCarBrand
 );
 app.post("/car-types", carManagementController.addNewCarType);
+app.post("/car-pictures", upload.single("carPicture"), uploadCarPicture);
 
 module.exports = app;
