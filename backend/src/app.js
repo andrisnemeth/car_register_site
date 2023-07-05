@@ -35,6 +35,7 @@ app.use(express.json());
 ///// GET
 app.get("/users", userController.getAllUsers);
 app.get("/users/:id", userController.getUserById);
+app.get("/users-changed-typed", userController.getAllChangedTypeUsersByType);
 app.get("/user-reqs", userReqController.getAllUserReqs);
 app.get("/car-brand", carManagementController.getCarBrand);
 app.get("/car-brands", carManagementController.getAllCarBrands);

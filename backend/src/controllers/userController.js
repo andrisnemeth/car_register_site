@@ -1,4 +1,5 @@
 const bcrypt = require("bcrypt");
+const { Op } = require("sequelize");
 const { generateToken } = require("../jsonwebtoken");
 const { validationResult } = require("express-validator");
 const User = require("../models/User");
@@ -26,6 +27,26 @@ async function getUserById(req, res) {
   } catch (error) {
     console.error("Error during getting user by id:", error);
     res.status(500).send();
+  }
+}
+
+async function getAllChangedTypeUsersByType(req, res) {
+  try {
+    const data = await User.findAll({
+      where: {
+        typeOfUser: {
+          [Op.notIn]: ["admin", "user"],
+        },
+      },
+    });
+
+    if (data.length === 0) {
+      return res.status(400).json({ error: "Nincs ilyen típusú felhasználó" });
+    }
+    res.send(data);
+  } catch (error) {
+    console.error("Error during getting users by type:", error);
+    res.sendStatus(500);
   }
 }
 
@@ -108,7 +129,9 @@ async function postLogout(req, res) {
 
     // Redirect to the logout page or the login page
     res.redirect("/logout");
-    return res.status(200).json({ message: "A felhasználó sikeresen kijelentkezett" });
+    return res
+      .status(200)
+      .json({ message: "A felhasználó sikeresen kijelentkezett" });
   } catch (error) {
     console.error("Error during logout:", error);
     res.sendStatus(500);
@@ -139,6 +162,7 @@ async function editTypeOfUserById(req, res) {
 module.exports = {
   getAllUsers,
   getUserById,
+  getAllChangedTypeUsersByType,
   registerUser,
   loginUser,
   postLogout,
