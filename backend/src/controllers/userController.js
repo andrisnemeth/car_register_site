@@ -7,6 +7,10 @@ const User = require("../models/User");
 async function getAllUsers(req, res) {
   try {
     const data = await User.findAll();
+
+    if(data.length === 0){
+      return res.status(404).json({ message: "User not found" });
+    }
     res.send(data);
   } catch (error) {
     console.log(error);
@@ -152,9 +156,26 @@ async function editTypeOfUserById(req, res) {
     user.typeOfUser = typeOfUser;
     await user.save();
 
-    res.json({ message: "User status updated", user });
+    res.json({ message: "User type updated", user });
   } catch (error) {
-    console.error("Error during changing userStatus:", error);
+    console.error("Error during changing usertype:", error);
+    res.sendStatus(500);
+  }
+}
+
+async function deleteUserById(req, res) {
+  try {
+    const {id} = req.params;
+    const data = await User.destroy({ where: { id: id } });
+
+    if (data === 0) {
+      return res.status(404).json({ message: "Felhasználó nem található" });
+    }
+
+    res.json({ message: "Felhasználó törölve", id: id });
+    // res.send(data);
+  } catch (error) {
+    console.log(error);
     res.sendStatus(500);
   }
 }
@@ -167,4 +188,5 @@ module.exports = {
   loginUser,
   postLogout,
   editTypeOfUserById,
+  deleteUserById,
 };

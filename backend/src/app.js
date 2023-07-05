@@ -61,5 +61,6 @@ app.post("/car-pictures", upload.single("carPicture"), uploadCarPicture);
 app.patch("/users/:id", userController.editTypeOfUserById);
 
 //// DELETE
+app.delete("/users/:id", userController.deleteUserById);
 
 module.exports = app;
