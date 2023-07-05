@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
+
+//picture uploading imports
 const storage = require("./storage");
 const multer = require("multer");
 const upload = multer({ storage });
@@ -32,6 +34,7 @@ app.use(express.json());
 
 ///// GET
 app.get("/users", userController.getAllUsers);
+app.get("/users/:id", userController.getUserById);
 app.get("/user-reqs", userReqController.getAllUserReqs);
 app.get("/car-brand", carManagementController.getCarBrand);
 app.get("/car-brands", carManagementController.getAllCarBrands);
@@ -50,5 +53,12 @@ app.post(
 );
 app.post("/car-types", carManagementController.addNewCarType);
 app.post("/car-pictures", upload.single("carPicture"), uploadCarPicture);
+
+///// UPDATE
+
+//// PATCH
+app.patch("/users/:id", userController.editTypeOfUserById);
+
+//// DELETE
 
 module.exports = app;

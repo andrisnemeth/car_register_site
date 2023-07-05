@@ -13,6 +13,22 @@ async function getAllUsers(req, res) {
   }
 }
 
+async function getUserById(req, res) {
+  try {
+    const { id } = req.params;
+    const data = await User.findByPk(id);
+    if (!data) {
+      return res
+        .status(400)
+        .json({ error: "Nincs felhasználó ezzel az ID-val" });
+    }
+    res.send(data);
+  } catch (error) {
+    console.error("Error during getting user by id:", error);
+    res.status(500).send();
+  }
+}
+
 async function registerUser(req, res) {
   console.log("Registration request received:", req.body);
   //input validation
@@ -92,11 +108,39 @@ async function postLogout(req, res) {
 
     // Redirect to the logout page or the login page
     res.redirect("/logout");
-    return res.status(200).json({ message: "User logged out successfully" });
+    return res.status(200).json({ message: "A felhasználó sikeresen kijelentkezett" });
   } catch (error) {
     console.error("Error during logout:", error);
     res.sendStatus(500);
   }
 }
 
-module.exports = { getAllUsers, registerUser, loginUser, postLogout };
+async function editTypeOfUserById(req, res) {
+  console.log(req.params);
+  try {
+    const { id } = req.params;
+    const { typeOfUser } = req.body;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.typeOfUser = typeOfUser;
+    await user.save();
+
+    res.json({ message: "User status updated", user });
+  } catch (error) {
+    console.error("Error during changing userStatus:", error);
+    res.sendStatus(500);
+  }
+}
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  registerUser,
+  loginUser,
+  postLogout,
+  editTypeOfUserById,
+};

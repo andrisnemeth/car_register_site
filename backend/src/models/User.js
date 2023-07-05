@@ -21,7 +21,7 @@ const User = sequelize.define("User", {
     allowNull: false,
   },
   typeOfUser: {
-    type: DataTypes.STRING,
+    type: DataTypes.ENUM("user", "admin", "tobedeleted", "tobeadmin"),
     allowNull: false,
   },
   isActive: {
@@ -33,7 +33,10 @@ const User = sequelize.define("User", {
 
 User.associate = (models) => {
   User.hasMany(models.UserReq, { foreignKey: "userId", as: "userReqs" });
-  User.hasMany(models.FavoriteCar, { foreignKey: "userId", as: "favoriteCars" });
+  User.hasMany(models.FavoriteCar, {
+    foreignKey: "userId",
+    as: "favoriteCars",
+  });
 };
 
 module.exports = User;
