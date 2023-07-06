@@ -25,7 +25,6 @@ export const fetchCarTypes = (type) => {
 };
 
 export const fetchSelectedCarTypes = (brandNameId) => {
-  console.log(typeof brandNameId)
   return axios
     .get(`http://localhost:8000/car-types-selected?brandNameId=${brandNameId}`)
     .then((response) => response.data)
@@ -36,7 +35,6 @@ export const fetchSelectedCarTypes = (brandNameId) => {
 };
 
 export async function addNewCarType(typeData) {
-  console.log(typeData.typeName);
   try {
     const response = await axios.post("http://localhost:8000/car-types", {
       typeName: typeData.typeName,
