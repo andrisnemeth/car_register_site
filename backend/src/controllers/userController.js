@@ -8,8 +8,8 @@ async function getAllUsers(req, res) {
   try {
     const data = await User.findAll();
 
-    if(data.length === 0){
-      return res.status(404).json({ message: "User not found" });
+    if (data.length === 0) {
+      return res.status(204).json({ message: "Felhasználó nem található" });
     }
     res.send(data);
   } catch (error) {
@@ -45,7 +45,7 @@ async function getAllChangedTypeUsersByType(req, res) {
     });
 
     if (data.length === 0) {
-      return res.status(400).json({ error: "Nincs ilyen típusú felhasználó" });
+      return res.status(204).json({ error: "Nincs ilyen típusú felhasználó" });
     }
     res.send(data);
   } catch (error) {
@@ -165,7 +165,7 @@ async function editTypeOfUserById(req, res) {
 
 async function deleteUserById(req, res) {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const data = await User.destroy({ where: { id: id } });
 
     if (data === 0) {
