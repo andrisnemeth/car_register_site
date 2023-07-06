@@ -8,7 +8,7 @@ import {
   Checkbox,
   Spacer,
 } from "@nextui-org/react";
-import { fetchUsers } from "../api/users";
+import { fetchUsers, fetchChangedTypeUsers } from "../api/users";
 import { fetchUserReqs } from "../api/userReqs";
 import { AddUserIcon } from "../assets/icons/AddUserIcon";
 import {
@@ -18,7 +18,7 @@ import {
   validateMatch,
   validateLongText,
 } from "../helpers/inputFieldValidators";
-import { postRegister } from "../api/users";
+import { postRegister, deleteUserById, editTypeOfUserById } from "../api/users";
 import { toast } from "react-toastify";
 import "../styles/Admin.css";
 import { addNewReq } from "../api/userReqs";
@@ -33,10 +33,14 @@ function Admin() {
   // Lists
   const [users, setUsers] = useState([]);
   const [usersCount, setUsersCount] = useState(0);
-  const [reqsCount, setReqsCount] = useState(0);
-  const [isUserListVisible, setIsUserListVisible] = useState(false);
   const [userReqs, setUserReqs] = useState([]);
+  const [reqsCount, setReqsCount] = useState(0);
+  const [changedTypeUsers, setChangedTypeUsers] = useState([]);
+  const [changedTypeUsersCount, setChangedTypeUsersCount] = useState(0);
+  const [isUserListVisible, setIsUserListVisible] = useState(false);
   const [isUserReqListVisible, setIsUserReqListVisible] = useState(false);
+  const [isChangedTypeUserListVisible, setIsChangedTypeUserListVisible] =
+    useState(false);
   // Registration
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
@@ -261,6 +265,24 @@ function Admin() {
     }
   };
 
+  const handleDeleteUserClick = async (ctuserid) => {
+    await deleteUserById(ctuserid);
+    setChangedTypeUsers(
+      changedTypeUsers.filter((user) => user.id !== ctuserid)
+    );
+    setUsersCount((prevCount) => prevCount - 1);
+    setChangedTypeUsersCount((prevCount) => prevCount - 1);
+  };
+
+  const handleAdminUserClick = async (ctuserid, typeOfUser) => {
+    const newTypeOfUser = "admin";
+    await editTypeOfUserById(ctuserid, newTypeOfUser);
+    setChangedTypeUsers(
+      changedTypeUsers.filter((user) => user.id !== ctuserid)
+    );
+    setUsersCount((prevCount) => prevCount + 1);
+  };
+
   const closeModalHandler = () => {
     setAddNewUserModalVisible(false);
     setEmail("");
@@ -297,6 +319,12 @@ function Admin() {
   }, [reqsCount]);
 
   useEffect(() => {
+    fetchChangedTypeUsers().then((data) => {
+      setChangedTypeUsers(data);
+    });
+  }, [changedTypeUsersCount]);
+
+  useEffect(() => {
     getAuthData();
   }, []);
 
@@ -304,6 +332,10 @@ function Admin() {
 
   const handleToggleUserList = () => {
     setIsUserListVisible(!isUserListVisible);
+  };
+
+  const handleToggleChangedTypeUserList = () => {
+    setIsChangedTypeUserListVisible(!isChangedTypeUserListVisible);
   };
 
   const handleToggleUserReqList = () => {
@@ -320,7 +352,7 @@ function Admin() {
       <h1>Admin felület</h1>
       <h3 style={{ marginTop: "3rem" }}>Új felhasználó hozzáadása</h3>
       <Button
-        iconRight={<AddUserIcon fill="currentColor" />}
+        iconRight={<AddUserIcon fill="currentColor" flat />}
         className="admin_page_button"
         size="lg"
         rounded
@@ -465,12 +497,14 @@ function Admin() {
               <Table.Column>E-mail cím</Table.Column>
               <Table.Column>Teljes név</Table.Column>
               <Table.Column>Státusz</Table.Column>
+              <Table.Column>Fiók típusa</Table.Column>
             </Table.Header>
             <Table.Body items={users}>
               {users.map((user) => (
                 <Table.Row key={user.id}>
                   <Table.Cell>{user.email}</Table.Cell>
                   <Table.Cell>{user.fullName}</Table.Cell>
+                  <Table.Cell>{user.typeOfUser}</Table.Cell>
                   <Table.Cell>
                     {user.isActive ? "Active" : "Not Active"}
                   </Table.Cell>
@@ -498,14 +532,97 @@ function Admin() {
           Felhasználók listázása
         </Button>
       )}
-      <h3 style={{ marginTop: "4rem" }}>Új kérés hozzáadása</h3>
+      <h3 style={{ marginTop: "4rem" }}>Változott felhasználói kérések</h3>
+      <h3>Felhasználói kérések</h3>
+      {isChangedTypeUserListVisible && (
+        <>
+          <Table
+            aria-label="Felhasználók lista"
+            css={{
+              height: "auto",
+              minWidth: "100%",
+              textAlign: "start",
+              wordWrap: "break-word",
+              zIndex: "1",
+            }}
+            color="primary"
+            selectionMode="single"
+          >
+            <Table.Header>
+              <Table.Column>E-mail cím</Table.Column>
+              <Table.Column>Teljes név</Table.Column>
+              <Table.Column>Státusz</Table.Column>
+              <Table.Column></Table.Column>
+            </Table.Header>
+            <Table.Body items={changedTypeUsers}>
+              {changedTypeUsers.map((ctuser) => (
+                <Table.Row key={ctuser.id}>
+                  <Table.Cell>{ctuser.email}</Table.Cell>
+                  <Table.Cell>{ctuser.fullName}</Table.Cell>
+                  <Table.Cell>
+                    {ctuser.typeOfUser === "tobedeleted"
+                      ? "Törlést kér"
+                      : "Admin jogosultságot kér"}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {ctuser.typeOfUser === "tobedeleted" && (
+                      <Button
+                        color="error"
+                        flat
+                        size="xs"
+                        onPress={() => handleDeleteUserClick(ctuser.id)}
+                      >
+                        Törlés
+                      </Button>
+                    )}
+                    {ctuser.typeOfUser === "tobeadmin" && (
+                      <Button
+                        color="success"
+                        flat
+                        size="xs"
+                        onPress={() => handleAdminUserClick(ctuser.id)}
+                      >
+                        Jóváhagyás
+                      </Button>
+                    )}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table>
+          <Button
+            className="admin_page_close_list_button"
+            rounded
+            size="sm"
+            onClick={handleToggleChangedTypeUserList}
+          >
+            Lista bezárása
+          </Button>
+        </>
+      )}
+      {!isChangedTypeUserListVisible && changedTypeUsers.length > 0 && (
+        <Button
+          className="admin_page_button"
+          rounded
+          size="lg"
+          onClick={handleToggleChangedTypeUserList}
+        >
+          Felhasználói kérések listázása
+        </Button>
+      )}
+      {!isChangedTypeUserListVisible && changedTypeUsers.length === 0 && (
+        <p aria-label="changedTypeUser_p_tag">
+          Jelenleg nincs változott státuszú fiók
+        </p>
+      )}
+      <h3 style={{ marginTop: "4rem" }}>Új észrevétel hozzáadása</h3>
       <Button
         className="admin_page_button"
         size="lg"
         rounded
         onPress={setAddNewUserReqModalVisible}
       >
-        Új felhasználói kérés rögzítése
+        Új felhasználói észrevétel rögzítése
       </Button>
       <Modal
         closeButton
@@ -516,7 +633,7 @@ function Admin() {
       >
         <Modal.Header>
           <Text id="modal-title" size={18}>
-            Új felhasználói kérés rögzítése
+            Új felhasználói észrevétel rögzítése
           </Text>
         </Modal.Header>
         <Modal.Body>
@@ -552,11 +669,11 @@ function Admin() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <h3>Felhasználói kérések</h3>
+      <h3>Felhasználói észrevételek</h3>
       {isUserReqListVisible && (
         <>
           <Table
-            aria-label="Felhasználói kérések lista"
+            aria-label="Felhasználói észrevételek lista"
             css={{
               height: "auto",
               minWidth: "100%",
@@ -596,6 +713,11 @@ function Admin() {
           </Button>
         </>
       )}
+      {!isUserReqListVisible && userReqs.length === 0 && (
+        <p aria-label="userReqs_p_tag">
+          Jelenleg nincs felhasználói észrevétel
+        </p>
+      )}
       {!isUserReqListVisible && userReqs.length > 0 && (
         <Button
           className="admin_page_button"
@@ -603,7 +725,7 @@ function Admin() {
           size="lg"
           onClick={handleToggleUserReqList}
         >
-          Felhasználói kérések listázása
+          Felhasználói észrevételek listázása
         </Button>
       )}
     </div>
