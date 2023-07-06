@@ -1,10 +1,30 @@
 import axios, { AxiosError } from "axios";
 
-
 //fetch users for list
 export async function fetchUsers() {
   const response = await axios.get("http://localhost:8000/users");
   return response.data;
+}
+
+export async function fetchChangedTypeUsers() {
+  const response = await axios.get("http://localhost:8000/users-changed-typed");
+  return response.data;
+}
+
+//edit user type to be admin
+export async function editTypeOfUserById(id, typeOfUser) {
+  try {
+    const response = await axios.patch(`http://localhost:8000/users/${id}`, {
+      typeOfUser: typeOfUser,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      console.log(error.response);
+      console.log(error.response?.data.error);
+      throw new Error(error.response?.data.error);
+    }
+  }
 }
 
 //registration
@@ -90,5 +110,18 @@ export async function postLogout() {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+//delete user
+export async function deleteUserById(id) {
+  try {
+    const response = await axios.delete(`http://localhost:8000/users/${id}`);
+    if (response.status === 200 || response.status === 204) {
+      return response.data;
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }
