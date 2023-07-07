@@ -31,18 +31,29 @@
     position: relative;
     overflow-x: hidden;
     max-width: max-content;
-    left: 10%;
     color: black;
     font-weight: 900;
     font-size: larger;
   }
 
+  .hero_img {
+    max-width: 100%;
+    height: auto;
+  }
+
   .text_on_hero {
     position: absolute;
     bottom: 50%;
+    left: 10%;
   }
 
   .hero_registration {
+    position: relative;
+    left: 10%;
+  }
+
+  .hero_login {
+    position: relative;
     left: 10%;
   }
 }

@@ -16,7 +16,7 @@ function HeroSection() {
   useEffect(() => {
     const intervalId = setInterval(
       () => setIndex((index) => index + 1),
-      2000 // every 2 seconds
+      2000
     );
     return () => clearTimeout(intervalId);
   }, []);
@@ -35,7 +35,7 @@ function HeroSection() {
             )}
           </div>
           {isDesktop && (
-            <img src={heroPicture} alt="car"  />
+            <img src={heroPicture} alt="car"  className="hero_img" />
           )}
           <div className="text_on_hero">
             <h1 id="text_on_hero_main">
