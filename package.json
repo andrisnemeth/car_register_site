@@ -1,0 +1,21 @@
+{
+  "name": "car_register_site",
+  "version": "1.0.0",
+  "description": "Car Register Site",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd frontend && npm run build && cd ../backend && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrisnemeth/car_register_site.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrisnemeth/car_register_site/issues"
+  },
+  "homepage": "https://github.com/andrisnemeth/car_register_site#readme"
+}
