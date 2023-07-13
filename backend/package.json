@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "tsc -p .",
+    "build-backend": "babel src -d dist",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
     "lint": "eslint ."
@@ -28,6 +28,8 @@
     "sequelize": "^6.32.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
     "nodemon": "^2.0.22"
   }
 }
